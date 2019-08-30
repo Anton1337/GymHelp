@@ -1,2 +1,0 @@
-# GymHelp
-Created with CodeSandbox
