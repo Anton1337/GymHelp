@@ -48,7 +48,8 @@ export default function BarWeights() {
         onChange={e => {
           setTextField(e.target.value);
 
-          const reachedValue = e.target.value;
+          const reachedValue = Number(e.target.value);
+          if (reachedValue === NaN) return;
           let totalweight = 20;
           let plates = {
             "25": 0,
