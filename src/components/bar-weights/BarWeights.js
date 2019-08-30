@@ -49,7 +49,6 @@ export default function DenseAppBar() {
           setTextField(e.target.value);
           // calculate the weights
           if (e.target.value <= 0) {
-            setWeights("ur anemic");
             return;
           }
           const reachedValue = e.target.value;
