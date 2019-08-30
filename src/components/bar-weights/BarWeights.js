@@ -28,7 +28,7 @@ const weights = [
   "0.5"
 ];
 
-export default function DenseAppBar() {
+export default function BarWeights() {
   const classes = useStyles();
 
   const [textField, setTextField] = useState("");
@@ -47,10 +47,7 @@ export default function DenseAppBar() {
         value={textField}
         onChange={e => {
           setTextField(e.target.value);
-          // calculate the weights
-          if (e.target.value <= 0) {
-            return;
-          }
+
           const reachedValue = e.target.value;
           let totalweight = 20;
           let plates = {
