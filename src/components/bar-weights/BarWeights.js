@@ -31,7 +31,7 @@ const weights = [
 export default function BarWeights() {
   const classes = useStyles();
 
-  const [textField, setTextField] = useState("");
+  const [textField, setTextField] = useState();
   const [plateAmounts, setPlateAmounts] = useState({});
 
   return (
@@ -41,16 +41,22 @@ export default function BarWeights() {
         id="standard-with-placeholder"
         label="Weight"
         placeholder="Example '50'"
-        className={classes.textField}
         type="number"
+        step={0.01}
         margin="normal"
         value={textField}
         onChange={e => {
           setTextField(e.target.value);
-
+          console.log("onChange called");
           const reachedValue = Number(e.target.value);
-          if (reachedValue === NaN) return;
-          let totalweight = 20;
+          console.log(reachedValue);
+          if (isNaN(reachedValue) || reachedValue <= 20) {
+            setPlateAmounts({});
+            console.log("not a number");
+            return;
+          }
+
+          let totalweight = 20; // Init at 20 cause of bar weight.
           let plates = {
             "25": 0,
             "20": 0,
@@ -62,28 +68,35 @@ export default function BarWeights() {
             "1.0": 0,
             "0.5": 0
           };
+
+          // If we have a .5 value we need to add the .25 on each side once.
+          if (!Number.isInteger(reachedValue)) {
+            totalweight += 1.25 * 2;
+            plates["1.25"] += 1;
+          }
+
           while (totalweight < reachedValue) {
-            if (totalweight + 25 * 2 <= reachedValue) {
+            if (totalweight + 25.0 * 2 <= reachedValue) {
               totalweight += 25 * 2;
               plates[25] += 1;
               continue;
             }
-            if (totalweight + 20 * 2 <= reachedValue) {
+            if (totalweight + 20.0 * 2 <= reachedValue) {
               totalweight += 20 * 2;
               plates[20] += 1;
               continue;
             }
-            if (totalweight + 15 * 2 <= reachedValue) {
+            if (totalweight + 15.0 * 2 <= reachedValue) {
               totalweight += 15 * 2;
               plates[15] += 1;
               continue;
             }
-            if (totalweight + 10 * 2 <= reachedValue) {
+            if (totalweight + 10.0 * 2 <= reachedValue) {
               totalweight += 10 * 2;
               plates[10] += 1;
               continue;
             }
-            if (totalweight + 5 * 2 <= reachedValue) {
+            if (totalweight + 5.0 * 2 <= reachedValue) {
               totalweight += 5 * 2;
               plates[5] += 1;
               continue;
@@ -93,12 +106,12 @@ export default function BarWeights() {
               plates["2.5"] += 1;
               continue;
             }
-            if (totalweight + 1.25 * 2 <= reachedValue) {
+            /*if (totalweight + 1.25 * 2 <= reachedValue) {
               totalweight += 1.25 * 2;
               plates["1.25"] += 1;
               continue;
-            }
-            if (totalweight + 1 * 2 <= reachedValue) {
+            }*/
+            if (totalweight + 1.0 * 2 <= reachedValue) {
               totalweight += 1 * 2;
               plates["1.0"] += 1;
               continue;
@@ -108,6 +121,7 @@ export default function BarWeights() {
               plates["0.5"] += 1;
               continue;
             }
+            break;
           }
 
           console.log(plates);
@@ -115,7 +129,7 @@ export default function BarWeights() {
         }}
       />
       {Object.keys(plateAmounts).map(key => {
-        if (plateAmounts[key] == 0) return null;
+        if (plateAmounts[key] === 0) return null;
         return (
           <Typography variant="h3" component="h2">
             {plateAmounts[key] + " x " + key + " KG "}
